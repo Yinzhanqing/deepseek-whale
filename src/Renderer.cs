@@ -467,7 +467,7 @@ namespace DeepSeekWhale
             }
 
             var cur = dsh.Current;
-            DrawText(g, "当前会话", F(7f, FontStyle.Regular), Palette.Dimmer, 22f, 50f, 54f, TextAlign.Left);
+            DrawText(g, dsh.Pinned ? "当前查看" : "最近活跃", F(7f, FontStyle.Regular), Palette.Dimmer, 22f, 50f, 54f, TextAlign.Left);
             DrawText(g, Fmt.Truncate(string.IsNullOrEmpty(cur.Title) ? "未命名会话" : cur.Title, 20),
                 F(7.6f, FontStyle.Regular), Palette.Dim, 78f, 49f, 200f, TextAlign.Left);
 
@@ -518,12 +518,20 @@ namespace DeepSeekWhale
 
             Divider(g, 20f, 280f, 198f);
             DrawText(g, "其他会话", F(7.6f, FontStyle.Regular), Palette.Dim, 22f, 206f, 100f, TextAlign.Left);
+            DrawText(g, dsh.Pinned ? "恢复最近" : "点一下切换", F(6.2f, FontStyle.Regular),
+                dsh.Pinned ? Palette.Accent : Palette.Dimmer, 196f, 207f, 82f, TextAlign.Right);
             int shown = 0;
             for (int i = 0; i < dsh.Sessions.Count && shown < 3; i++)
             {
                 var s = dsh.Sessions[i];
                 if (s.Total <= 0 || s == cur) continue;
                 float ry = 218f + shown * 16f;
+                var row = new RectangleF(18f, ry - 2f, 264f, 15f);
+                if (row.Contains(hover))
+                {
+                   using (var b = new SolidBrush(Color.FromArgb(20, 255, 255, 255)))
+                        g.FillPath(b, Rounded(row, 6f));
+                }
                 DrawText(g, Fmt.Truncate(string.IsNullOrEmpty(s.Title) ? "未命名会话" : s.Title, 18),
                     F(7.2f, FontStyle.Regular), Palette.Dim, 22f, ry, 168f, TextAlign.Left);
                 DrawText(g, YuanCost(s.Cost), F(7.2f, FontStyle.Regular), Palette.Dimmer, 200f, ry, 78f, TextAlign.Right);

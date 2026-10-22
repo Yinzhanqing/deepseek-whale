@@ -19,6 +19,7 @@ namespace DeepSeekWhale
         public bool HideWithDsh = true;
         public bool Locked = false;
         public bool Mini = false;
+        public string ViewSessionId = "";
         public string Skin = "blue";
         public bool WaterReminder = true;
         public int WaterIntervalMin = 60;
@@ -82,6 +83,7 @@ namespace DeepSeekWhale
             c.HideWithDsh = HideWithDsh;
             c.Locked = Locked;
             c.Mini = Mini;
+            c.ViewSessionId = ViewSessionId;
             c.Skin = Skin;
             c.WaterReminder = WaterReminder;
             c.WaterIntervalMin = WaterIntervalMin;
@@ -118,6 +120,7 @@ namespace DeepSeekWhale
             d["hideWithDsh"] = HideWithDsh;
             d["locked"] = Locked;
             d["mini"] = Mini;
+            d["viewSessionId"] = ViewSessionId;
             d["skin"] = Skin;
             d["waterReminder"] = WaterReminder;
             d["waterIntervalMin"] = WaterIntervalMin;
@@ -158,6 +161,7 @@ namespace DeepSeekWhale
                 c.HideWithDsh = JsonUtil.Bool(d, "hideWithDsh", true);
                 c.Locked = JsonUtil.Bool(d, "locked", false);
                 c.Mini = JsonUtil.Bool(d, "mini", false);
+                c.ViewSessionId = JsonUtil.Str(d, "viewSessionId", "");
                 c.Skin = JsonUtil.Str(d, "skin", "blue");
                 if (c.Skin != "sakura" && c.Skin != "mint") c.Skin = "blue";
                 c.WaterReminder = JsonUtil.Bool(d, "waterReminder", true);

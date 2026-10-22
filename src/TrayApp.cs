@@ -251,6 +251,19 @@ namespace DeepSeekWhale
                     {
                         dshBusy = false;
                         bool first = dsh == null;
+                        if (!string.IsNullOrEmpty(Cfg.ViewSessionId))
+                        {
+                            s.Pinned = false;
+                            foreach (var x in s.Sessions)
+                            {
+                                if (x.Total > 0 && x.Id == Cfg.ViewSessionId)
+                                {
+                                    s.Current = x;
+                                    s.Pinned = true;
+                                    break;
+                                }
+                            }
+                        }
                         dsh = s;
                         if (first)
                             Log.Info("DSH usage sessions=" + s.Sessions.Count + " today=" + s.TodayCost + " err=" + (s.Error ?? "-"));
@@ -570,6 +583,33 @@ namespace DeepSeekWhale
             if (Pet == null || !Pet.Visible) return;
             Pet.SetExpanded(false);
             Pet.EnterCannonMode();
+        }
+
+        public void PinDshSession(string id)
+        {
+            Cfg.ViewSessionId = id ?? "";
+            SaveConfig();
+            if (dsh == null) return;
+            if (!string.IsNullOrEmpty(id))
+            {
+                foreach (var x in dsh.Sessions)
+                {
+                    if (x.Total > 0 && x.Id == id)
+                    {
+                        dsh.Current = x;
+                        dsh.Pinned = true;
+                        RebuildVm();
+                        return;
+                    }
+                }
+            }
+            dsh.Pinned = false;
+            dsh.Current = null;
+            foreach (var x in dsh.Sessions)
+            {
+                if (x.Total > 0) { dsh.Current = x; break; }
+            }
+            RebuildVm();
         }
 
         public void Say(string text, double seconds)

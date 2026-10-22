@@ -1079,10 +1079,10 @@ namespace DeepSeekWhale
             }
             if (trip == TripPhase.Back) return;
             if (trip != TripPhase.None) CancelTrip(false);
-            HandleClick(HitAt(e.Location));
+            HandleClick(HitAt(e.Location), e.Location);
         }
 
-        void HandleClick(HitArea hit)
+        void HandleClick(HitArea hit, Point client)
         {
             switch (hit)
             {
@@ -1103,6 +1103,9 @@ namespace DeepSeekWhale
                     break;
                 case HitArea.Setup:
                     app.PrimaryAction();
+                    break;
+                case HitArea.Card:
+                    HandleUsageCardClick(client);
                     break;
                 case HitArea.TabBalance:
                     usageTab = false;
@@ -1127,6 +1130,30 @@ namespace DeepSeekWhale
             }
             whaleClickPending = true;
             clickTimer.Start();
+        }
+
+        void HandleUsageCardClick(Point client)
+        {
+            if (!usageTab || app.Vm == null || app.Vm.Dsh == null) return;
+            var dsh = app.Vm.Dsh;
+            var lp = new PointF(client.X / scale, client.Y / scale);
+            if (dsh.Pinned && lp.Y >= 202f && lp.Y <= 218f && lp.X >= 186f)
+            {
+                app.PinDshSession(null);
+                return;
+            }
+            if (lp.Y < 214f || lp.Y > 264f) return;
+            int idx = (int)((lp.Y - 218f) / 16f);
+            if (idx < 0 || idx > 2) return;
+            DshSession target = null;
+            int n = 0;
+            foreach (var s in dsh.Sessions)
+            {
+                if (s.Total <= 0 || s == dsh.Current) continue;
+                if (n == idx) { target = s; break; }
+                n++;
+            }
+            if (target != null) app.PinDshSession(target.Id);
         }
 
         void ShowMenu()

@@ -44,6 +44,7 @@ namespace DeepSeekWhale
     {
         public bool Available;
         public string Error;
+        public bool Pinned;
         public readonly List<DshSession> Sessions = new List<DshSession>();
         public DshSession Current;
         public decimal TodayCost;
