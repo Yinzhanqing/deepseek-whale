@@ -1,0 +1,27 @@
+# Build output
+dist/
+release/
+bin/
+obj/
+
+# Generated previews and test data
+render/
+test/
+
+# IDE
+.vs/
+*.user
+*.suo
+
+# Local logs / packages
+*.log
+*.zip
+node_modules/
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Internal design notes with local usage samples
+docs/roadmap-v2.md
+docs/roadmap-v3.md
